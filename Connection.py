@@ -28,7 +28,7 @@ class DeviceConnection:
     def connect(self, priv_exec_pass) -> None:
         """
         Method that establishes the SSH connection to the device.
-        :param priv_exec_pass: The password used to access the priviledged exec mode of the target device.
+        :param priv_exec_pass: The password used to access the privileged exec mode of the target device.
         :return:
         """
         self.client = paramiko.SSHClient()

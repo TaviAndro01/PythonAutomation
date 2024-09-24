@@ -51,32 +51,33 @@ def main() -> None:
         exit()
 
 
-def ConfigMenuRouter() -> None:
+def ConfigMenuRouter(device) -> None:
     """
     Menu with configuration options in case the device we connected to is a Router.
     :return:
     """
+
+    router_instance = Router(device['name'], device['ip'], device['username'], device['password'], device['privileged_password'])
+
     print("""
     The following configuration options are available for the Router:
-    1. Configure a vlan.
-    2. Configure a sub-interface.
-    3. Configure a DHCP server.
-    4. Set up RIPv2.
-    5. Exit to Main Menu.
+    1. Configure a sub-interface.
+    2. Configure a DHCP server.
+    3. Set up RIPv2.
+    4. Exit to Main Menu.
     """)
     config_choice = input("Enter your choice: ")
     if config_choice == '1':
-        pass
+        Router.config_Subinterface()
     elif config_choice == '2':
-        pass
+        Router.setup_DHCP()
     elif config_choice == '3':
-        pass
+        Router.config_RipV2()
     elif config_choice == '4':
-        pass
-    elif config_choice == '5':
         main()
     else:
-        raise ValueError("Invalid choice")
+        print("Please enter a valid option.")
+        ConfigMenuRouter()
 
 
 def ConfigMenuSwitch(device) -> None:
@@ -84,29 +85,32 @@ def ConfigMenuSwitch(device) -> None:
     Menu with configuration options in case the device we connected to is a Switch.
     :return:
     """
+
+    switch_instance = Switch(device['name'], device['ip'], device['username'], device['password'], device['privileged_password'])
     print("""
     The following configuration options are available for the Switch:
     1. Configure a Vlan.
-    2. Configure a PortChannel.
-    3. Configure Security.
-    4. Configure STP.
-    5. Configure HSRP (for multilayer switches only).
-    6. Exit to Main Menu.
+    2. Configure Security.
+    3. Configure STP.
+    4. Configure HSRP (for multilayer switches only).
+    5. Exit to Main Menu.
     """)
     config_choice = input("Enter your choice: ")
     if config_choice == '1':
-        pass
+        switch_instance.config_Vlan()
     elif config_choice == '2':
-        pass
+        switch_instance.config_Security()
     elif config_choice == '3':
-        pass
+        switch_instance.config_STP()
     elif config_choice == '4':
-        pass
-    elif config_choice == '5':
         if "multilayer" not in device['name'].lower():
             print("This is not a multilayer switch, as such it can not act as a router.")
             ConfigMenuSwitch(device)
-    elif config_choice == '6':
+        else:
+            switch_instance.config_HSRP()
+
+    elif config_choice == '5':
         main()
     else:
-        raise ValueError("Invalid choice.")
+        print("Please enter a valid choice.")
+        ConfigMenuSwitch(device)
