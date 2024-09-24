@@ -1,25 +1,13 @@
 """
 Module responsible for switch configurations.
 """
-from Connection import DeviceConnection
+from Device import Device
 
 
-class Switch:
+class Switch(Device):
     """
     Class tasked with encasing methods related to switch configuration.
     """
-    def __init__(self, name, ip, username, password, priv_exec_pass):
-        """
-        The constructor for the Switch class.
-        :param name: The name of the switch.
-        :param ip: The IP address of the switch.
-        :param username: The username of the switch.
-        :param password: The password of the switch.
-        :param priv_exec_pass: The password for the privileged exec mode of the switch.
-        """
-        self.name = name
-        self.connection = DeviceConnection(ip, username, password)
-        self.priv_exec_pass = priv_exec_pass
 
     def config_Security(self):
         """
@@ -49,22 +37,6 @@ class Switch:
             stdout, stderr = self.connection.send_command(f'spanning-tree mode rapid-pvst\nspanning-tree vlan {seccondary_vlan} root secondary\n')
         else:
             return ValueError("The Vlan names should be numbers.")
-        self.connection.close()
-
-    def config_HSRP(self):
-        """
-        Method for configuring HSRP on a switch.
-        :return:
-        """
-        self.connection.connect(self.priv_exec_pass)
-        interface = input("Enter the ID of the interface: ")
-        standby_id = input("Enter the ID of the standby interface: ")
-        vswitch_ip = input("Enter the IP address of the Virtual Router: ")
-        priority = input(
-            "Enter the priority of the physical interface (no if you would like to keep default priority - 100): ")
-        if priority == "no":
-            priority = "100"
-        stdout, stderr = self.connection.send_command(f'int {interface}\nstandby {standby_id} ip {vswitch_ip}\nstandby {standby_id} priority {priority}\nstandby {standby_id} preempt\n')
         self.connection.close()
 
     def config_Vlan(self):

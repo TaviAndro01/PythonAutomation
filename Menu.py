@@ -74,9 +74,9 @@ def ConfigMenuRouter(device) -> None:
     """)
     config_choice = input("Enter your choice: ")
     if config_choice == '1':
-        router_instance.config_HSRP(device['ip'])
+        router_instance.config_HSRP()
     elif config_choice == '2':
-        router_instance.setup_DHCP()
+        router_instance.setup_DHCP(device['ip'])
     elif config_choice == '3':
         router_instance.config_RipV2()
     elif config_choice == '4':
