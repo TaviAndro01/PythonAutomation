@@ -1,3 +1,6 @@
+"""
+Module for displaying menu items, and executing the functions according to the user input.
+"""
 from Switch import Switch
 from Router import Router
 import json
@@ -38,17 +41,20 @@ def main() -> None:
                 try:
                     if device['ip'] == target_device:
                         device_not_found = False
-                        if "router" in device['name'].lower():
-                            ConfigMenuRouter()
-                        elif "switch" in device['name'].lower():
+                        if "router" in device['type'].lower():
+                            ConfigMenuRouter(device)
+                        elif "sw" in device['type'].lower():
                             ConfigMenuSwitch(device)
-                    else:
-                        raise Exception("Device not found")
+
                 except TimeoutError or ConnectionError:
                     print("Connection failed, network may be unreachable, or target device might not exist.")
+        if device_not_found:
+            raise ValueError(f"Device with ip {target_device} not found. Please add it to the file or make sure the ip is correct.")
     elif choice == '2':
         print("Thank you for using the Network Automation Tool!")
         exit()
+    else:
+        raise ValueError("Invalid choice. Please restart the script to try again.")
 
 
 def ConfigMenuRouter(device) -> None:
@@ -61,23 +67,23 @@ def ConfigMenuRouter(device) -> None:
 
     print("""
     The following configuration options are available for the Router:
-    1. Configure a sub-interface.
+    1. Configure HSRP for a Vlan.
     2. Configure a DHCP server.
     3. Set up RIPv2.
     4. Exit to Main Menu.
     """)
     config_choice = input("Enter your choice: ")
     if config_choice == '1':
-        Router.config_Subinterface()
+        router_instance.config_HSRP(device['ip'])
     elif config_choice == '2':
-        Router.setup_DHCP()
+        router_instance.setup_DHCP()
     elif config_choice == '3':
-        Router.config_RipV2()
+        router_instance.config_RipV2()
     elif config_choice == '4':
         main()
     else:
         print("Please enter a valid option.")
-        ConfigMenuRouter()
+        ConfigMenuRouter(device)
 
 
 def ConfigMenuSwitch(device) -> None:

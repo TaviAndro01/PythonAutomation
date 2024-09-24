@@ -34,7 +34,7 @@ class DeviceConnection:
         self.client = paramiko.SSHClient()
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         self.client.connect(self.ip, username=self.username, password=self.password)
-        self.client.exec_command(f'ena\n{priv_exec_pass}\nconf t')
+        self.client.exec_command(f'ena\n{priv_exec_pass}\nconf t\n')
 
     def send_command(self, command):
         """

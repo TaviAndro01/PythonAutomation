@@ -29,7 +29,7 @@ class Switch:
         self.connection.connect(self.priv_exec_pass)
         interface = input("Please enter the name of the interface you want to apply security to: ")
         vlan = input("Please enter the name of the VLAN you want to be allowed to pass: ")
-        stdout, stderr = self.connection.send_command(f'int {interface}\nswitchport mode access\nswitchport access vlan {vlan}\nswitchport port security')
+        stdout, stderr = self.connection.send_command(f'int {interface}\nswitchport mode access\nswitchport access vlan {vlan}\nswitchport port security\n')
         self.connection.close()
 
     def config_STP(self):
@@ -42,11 +42,11 @@ class Switch:
         seccondary_vlan = input("Please enter the ID of the VLAN you want to set as secondary on this switch (enter q if you do not want to set a secondary vlan): ")
 
         if primary_vlan != 'q' and seccondary_vlan != 'q':
-            stdout, stderr = self.connection.send_command(f'spanning-tree mode rapid-pvst\nspanning-tree vlan {primary_vlan} root primary\nspanning-tree vlan {seccondary_vlan} root secondary')
+            stdout, stderr = self.connection.send_command(f'spanning-tree mode rapid-pvst\nspanning-tree vlan {primary_vlan} root primary\nspanning-tree vlan {seccondary_vlan} root secondary\n')
         elif primary_vlan != 'q' and seccondary_vlan == 'q':
-            stdout, stderr = self.connection.send_command(f'spanning-tree mode rapid-pvst\nspanning-tree vlan {primary_vlan} root primary')
+            stdout, stderr = self.connection.send_command(f'spanning-tree mode rapid-pvst\nspanning-tree vlan {primary_vlan} root primary\n')
         elif primary_vlan == 'q' and seccondary_vlan != 'q':
-            stdout, stderr = self.connection.send_command(f'spanning-tree mode rapid-pvst\nspanning-tree vlan {seccondary_vlan} root secondary')
+            stdout, stderr = self.connection.send_command(f'spanning-tree mode rapid-pvst\nspanning-tree vlan {seccondary_vlan} root secondary\n')
         else:
             return ValueError("The Vlan names should be numbers.")
         self.connection.close()
@@ -57,12 +57,19 @@ class Switch:
         :return:
         """
         self.connection.connect(self.priv_exec_pass)
-        stdout, stderr = self.connection.send_command('')
+        interface = input("Enter the ID of the interface: ")
+        standby_id = input("Enter the ID of the standby interface: ")
+        vswitch_ip = input("Enter the IP address of the Virtual Router: ")
+        priority = input(
+            "Enter the priority of the physical interface (no if you would like to keep default priority - 100): ")
+        if priority == "no":
+            priority = "100"
+        stdout, stderr = self.connection.send_command(f'int {interface}\nstandby {standby_id} ip {vswitch_ip}\nstandby {standby_id} priority {priority}\nstandby {standby_id} preempt\n')
         self.connection.close()
 
     def config_Vlan(self):
         self.connection.connect(self.priv_exec_pass)
-        vlan_ID = input("Please enter the ID of the VLAN you want to be created: ")
-        vlan_NAME = input("Please enter the name of the VLAN you want to create: ")
-        stdout, stderr = self.connection.send_command(f'vlan {vlan_ID}\n{vlan_NAME}')
+        vlan_id = input("Please enter the ID of the VLAN you want to be created: ")
+        vlan_name = input("Please enter the name of the VLAN you want to create: ")
+        stdout, stderr = self.connection.send_command(f'vlan {vlan_id}\n{vlan_name}\n')
         self.connection.close()
