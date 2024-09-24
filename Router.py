@@ -26,7 +26,19 @@ class Router:
         self.connection.connect(self.priv_exec_pass)
         network_1 = input("Enter the ip address of the first network: ")
         network_2 = input("Enter the ip address of the second network: ")
-        stdout, stderr = self.connection.send_command(f'router rip\nversion 2\nno auto-summary\nnetwork {network_1}\nnetwork {network_2}')
+        redistrib = input("Do you want to redistribute the network? (y/n): ")
+        if redistrib == "y":
+            redistributed = True
+        elif redistrib == "n":
+            redistributed = False
+        else:
+            print("You entered an invalid option. The router will not redistribute it's static routes.")
+            redstributed = False
+
+        if redistributed == False:
+            stdout, stderr = self.connection.send_command(f'router rip\nversion 2\nno auto-summary\nnetwork {network_1}\nnetwork {network_2}')
+        elif redistributed == True:
+            stdout, stderr = self.connection.send_command(f'router rip\nversion 2\nno auto-summary\nnetwork {network_1}\nnetwork {network_2}\nredistribute static\n')
         self.connection.close()
 
     def config_Subinterface(self):
@@ -35,7 +47,6 @@ class Router:
         :return:
         """
         self.connection.connect(self.priv_exec_pass)
-
         stdout, stderr = self.connection.send_command('config subinterface command')
         self.connection.close()
 
@@ -46,13 +57,4 @@ class Router:
         """
         self.connection.connect(self.priv_exec_pass)
         stdout, stderr = self.connection.send_command('dhcp command')
-        self.connection.close()
-
-    def config_HSRP(self):
-        """
-        Method for configuring HSRP on a Router.
-        :return:
-        """
-        self.connection.connect(self.priv_exec_pass)
-        stdout, stderr = self.connection.send_command('stp command')
         self.connection.close()
