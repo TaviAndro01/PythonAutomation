@@ -17,7 +17,7 @@ class Switch(Device):
         self.connection.connect(self.priv_exec_pass)
         interface = input("Please enter the name of the interface you want to apply security to: ")
         vlan = input("Please enter the name of the VLAN you want to be allowed to pass: ")
-        stdout, stderr = self.connection.send_command(f'int {interface}\nswitchport port-security\nswitchport mode access\nswitchport access vlan {vlan}\nspanning tree bpdu guard enable\n')
+        stdout, stderr = self.connection.send_command(f'int {interface}\nswitchport port-security\nswitchport mode access\nswitchport access vlan {vlan}\nspanning-tree bpdu guard enable\n')
         self.connection.close()
 
     def config_STP(self):

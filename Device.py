@@ -36,7 +36,7 @@ class Device:
         if priority.lower() == "no":
             priority = "100"
         stdout, stderr = self.connection.send_command(
-            f'int {interface}\nstandby {standby_id} ip {vrouter_ip}\n'
+            f'int {interface}\nstandby version 2\nstandby {standby_id} ip {vrouter_ip}\n'
             f'standby {standby_id} priority {priority}\nstandby {standby_id} preempt\n'
         )
         self.connection.close()
