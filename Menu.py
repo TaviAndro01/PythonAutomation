@@ -3,17 +3,7 @@ Module for displaying menu items, and executing the functions according to the u
 """
 from Switch import Switch
 from Router import Router
-import json
-
-
-def load_device_data(filename):
-    """
-    Loads data from JSON file.
-    :param filename: Represents the name of the target file.
-    :return: Dictionary containing the data for the devices.
-    """
-    with open(filename, 'r') as file:
-        return json.load(file)
+from DataLoader import DataLoader
 
 
 def main() -> None:
@@ -22,8 +12,8 @@ def main() -> None:
     Checks if the device we want to configure exists in our device list.
     :return:
     """
-
-    devices = load_device_data('deviceDetails.json')
+    device_loader = DataLoader()
+    devices = device_loader.load_device_data('deviceDetails.json')
 
     print("""
     Welcome to Main Menu of the Network Automation Tool!
