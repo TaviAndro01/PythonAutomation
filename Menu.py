@@ -3,7 +3,7 @@ Module for displaying menu items, and executing the functions according to the u
 """
 from Switch import Switch
 from Router import Router
-from DataLoader import DataLoader
+from DataLoader import Data_Loader
 
 
 def main() -> None:
@@ -12,7 +12,7 @@ def main() -> None:
     Checks if the device we want to configure exists in our device list.
     :return:
     """
-    device_loader = DataLoader()
+    device_loader = Data_Loader()
     devices = device_loader.load_device_data('deviceDetails.json')
 
     print("""
@@ -55,25 +55,27 @@ def ConfigMenuRouter(device) -> None:
 
     router_instance = Router(device['name'], device['ip'], device['username'], device['password'], device['privileged_password'])
 
-    print("""
-    The following configuration options are available for the Router:
-    1. Configure HSRP for a Vlan.
-    2. Configure a DHCP server.
-    3. Set up RIPv2.
-    4. Exit to Main Menu.
-    """)
-    config_choice = input("Enter your choice: ")
-    if config_choice == '1':
-        router_instance.config_HSRP()
-    elif config_choice == '2':
-        router_instance.setup_DHCP(device['ip'])
-    elif config_choice == '3':
-        router_instance.config_RipV2()
-    elif config_choice == '4':
-        main()
-    else:
-        print("Please enter a valid option.")
-        ConfigMenuRouter(device)
+    while True:
+        print("""
+        The following configuration options are available for the Router:
+        1. Configure HSRP for a Vlan.
+        2. Configure a DHCP server.
+        3. Set up RIPv2.
+        4. Exit to Main Menu.
+        """)
+        config_choice = input("Enter your choice: ")
+        if config_choice == '1':
+            router_instance.config_HSRP()
+        elif config_choice == '2':
+            router_instance.setup_DHCP(device['ip'])
+        elif config_choice == '3':
+            router_instance.config_RipV2()
+        elif config_choice == '4':
+            main()
+            break
+        else:
+            print("Please enter a valid option.")
+            ConfigMenuRouter(device)
 
 
 def ConfigMenuSwitch(device) -> None:
@@ -83,30 +85,32 @@ def ConfigMenuSwitch(device) -> None:
     """
 
     switch_instance = Switch(device['name'], device['ip'], device['username'], device['password'], device['privileged_password'])
-    print("""
-    The following configuration options are available for the Switch:
-    1. Configure a Vlan.
-    2. Configure Security.
-    3. Configure STP.
-    4. Configure HSRP (for multilayer switches only).
-    5. Exit to Main Menu.
-    """)
-    config_choice = input("Enter your choice: ")
-    if config_choice == '1':
-        switch_instance.config_Vlan()
-    elif config_choice == '2':
-        switch_instance.config_Security()
-    elif config_choice == '3':
-        switch_instance.config_STP()
-    elif config_choice == '4':
-        if "multilayer" not in device['name'].lower():
-            print("This is not a multilayer switch, as such it can not act as a router.")
-            ConfigMenuSwitch(device)
-        else:
-            switch_instance.config_HSRP()
+    while True:
+        print("""
+        The following configuration options are available for the Switch:
+        1. Configure a Vlan.
+        2. Configure Security.
+        3. Configure STP.
+        4. Configure HSRP (for multilayer switches only).
+        5. Exit to Main Menu.
+        """)
+        config_choice = input("Enter your choice: ")
+        if config_choice == '1':
+            switch_instance.config_Vlan()
+        elif config_choice == '2':
+            switch_instance.config_Security()
+        elif config_choice == '3':
+            switch_instance.config_STP()
+        elif config_choice == '4':
+            if "multilayer" not in device['name'].lower():
+                print("This is not a multilayer switch, as such it can not act as a router.")
+                ConfigMenuSwitch(device)
+            else:
+                switch_instance.config_HSRP()
 
-    elif config_choice == '5':
-        main()
-    else:
-        print("Please enter a valid choice.")
-        ConfigMenuSwitch(device)
+        elif config_choice == '5':
+            main()
+            break
+        else:
+            print("Please enter a valid choice.")
+            ConfigMenuSwitch(device)
