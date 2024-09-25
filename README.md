@@ -51,10 +51,8 @@ The tool employs Object-Oriented Programming (OOP) to abstract network devices:
 
 ### SSH Connection Handling
 
-SSH connections are managed using a singleton pattern to ensure only one connection per device:
-
 - **Class**: 
-  - `Connection`: This class manages the SSH connection lifecycle.
+  - `DeviceConnection`: This class manages the SSH connection lifecycle.
 
 ### Application Navigation
 
