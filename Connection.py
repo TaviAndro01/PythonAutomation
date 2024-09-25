@@ -66,6 +66,7 @@ class DeviceConnection:
         Method that closes the SSH connection.
         """
         if self.client:
+            self.shell.send('\ndo wr\n')
             self.client.close()
             self.client = None
             self.shell = None

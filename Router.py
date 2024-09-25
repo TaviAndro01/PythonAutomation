@@ -65,4 +65,3 @@ class Router(Device):
 
         self.connection.close()
 
-

@@ -3,6 +3,7 @@ Module responsible for handling function common between the different device typ
 e.g: HSRP,
 """
 from Connection import DeviceConnection
+import subprocess
 
 
 class Device:
@@ -39,3 +40,26 @@ class Device:
             f'standby {standby_id} priority {priority}\nstandby {standby_id} preempt\n'
         )
         self.connection.close()
+
+    def ping_Device(self) -> None:
+        """
+        Method for pinging another device with the purpose of testing connectivity.
+        :return:
+        """
+        try:
+            self.connection.connect(self.priv_exec_pass)
+
+            ping_target = input("Enter the IP address of the target device: ")
+
+            response = subprocess.run(["ping", "-c", "4", ping_target], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+            if response.returncode == 0:
+                print(f"There is connectivity with the device with the IP {ping_target}.")
+            else:
+                print(f"There is no connectivity with the device with the IP {ping_target}.")
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+        finally:
+            self.connection.close()

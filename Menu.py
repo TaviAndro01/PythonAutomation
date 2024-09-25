@@ -61,7 +61,8 @@ def ConfigMenuRouter(device) -> None:
         1. Configure HSRP for a Vlan.
         2. Configure a DHCP server.
         3. Set up RIPv2.
-        4. Exit to Main Menu.
+        4. Ping a device
+        5. Exit to Main Menu.
         """)
         config_choice = input("Enter your choice: ")
         if config_choice == '1':
@@ -71,6 +72,8 @@ def ConfigMenuRouter(device) -> None:
         elif config_choice == '3':
             router_instance.config_RipV2()
         elif config_choice == '4':
+            router_instance.ping_Device()
+        elif config_choice == '5':
             main()
             break
         else:
@@ -92,7 +95,8 @@ def ConfigMenuSwitch(device) -> None:
         2. Configure Security.
         3. Configure STP.
         4. Configure HSRP (for multilayer switches only).
-        5. Exit to Main Menu.
+        5. Ping a device.
+        6. Exit to Main Menu.
         """)
         config_choice = input("Enter your choice: ")
         if config_choice == '1':
@@ -107,8 +111,9 @@ def ConfigMenuSwitch(device) -> None:
                 ConfigMenuSwitch(device)
             else:
                 switch_instance.config_HSRP()
-
         elif config_choice == '5':
+            switch_instance.ping_Device()
+        elif config_choice == '6':
             main()
             break
         else:
