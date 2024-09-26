@@ -106,11 +106,10 @@ def ConfigMenuSwitch(device) -> None:
         elif config_choice == '3':
             switch_instance.config_STP()
         elif config_choice == '4':
-            if "multilayer" not in device['name'].lower():
-                print("This is not a multilayer switch, as such it can not act as a router.")
-                ConfigMenuSwitch(device)
+            if "multilayer" in device['type'].lower():
+                switch.hsrp()
             else:
-                switch_instance.config_HSRP()
+                print("Option 4 is only for multilayer switches.")
         elif config_choice == '5':
             switch_instance.ping_Device()
         elif config_choice == '6':
